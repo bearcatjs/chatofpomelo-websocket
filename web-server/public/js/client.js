@@ -23,8 +23,8 @@ util = {
 	//zeroPad(2, 500); returns "500"
 	zeroPad: function(digits, n) {
 		n = n.toString();
-		while(n.length < digits)
-		n = '0' + n;
+		while (n.length < digits)
+			n = '0' + n;
 		return n;
 	},
 	//it is almost 8 o'clock PM here
@@ -38,7 +38,7 @@ util = {
 	//does the argument only contain whitespace?
 	isBlank: function(text) {
 		var blank = /^\s*$/;
-		return(text.match(blank) !== null);
+		return (text.match(blank) !== null);
 	}
 };
 
@@ -51,11 +51,11 @@ function scrollDown(base) {
 // add message on board
 function addMessage(from, target, text, time) {
 	var name = (target == '*' ? 'all' : target);
-	if(text === null) return;
-	if(time == null) {
+	if (text === null) return;
+	if (time == null) {
 		// if the time is null or undefined, use the current time.
 		time = new Date();
-	} else if((time instanceof Date) === false) {
+	} else if ((time instanceof Date) === false) {
 		// if it's a timestamp, interpret it
 		time = new Date(time);
 	}
@@ -77,8 +77,8 @@ function addMessage(from, target, text, time) {
 
 // show tip
 function tip(type, name) {
-	var tip,title;
-	switch(type){
+	var tip, title;
+	switch (type) {
 		case 'online':
 			tip = name + ' is online now.';
 			title = 'Online Notify';
@@ -92,13 +92,13 @@ function tip(type, name) {
 			title = 'Message Notify';
 			break;
 	}
-	var pop=new Pop(title, tip);
+	var pop = new Pop(title, tip);
 };
 
 // init user list
 function initUserList(data) {
 	users = data.users;
-	for(var i = 0; i < users.length; i++) {
+	for (var i = 0; i < users.length; i++) {
 		var slElement = $(document.createElement("option"));
 		slElement.attr("value", users[i]);
 		slElement.text(users[i]);
@@ -118,8 +118,8 @@ function addUser(user) {
 function removeUser(user) {
 	$("#usersList option").each(
 		function() {
-			if($(this).val() === user) $(this).remove();
-	});
+			if ($(this).val() === user) $(this).remove();
+		});
 };
 
 // set your name
@@ -168,7 +168,7 @@ function queryEntry(uid, callback) {
 			uid: uid
 		}, function(data) {
 			pomelo.disconnect();
-			if(data.code === 500) {
+			if (data.code === 500) {
 				showError(LOGIN_ERROR);
 				return;
 			}
@@ -183,9 +183,10 @@ $(document).ready(function() {
 
 	//wait message from the server.
 	pomelo.on('onChat', function(data) {
+		console.log(data);
 		addMessage(data.from, data.target, data.msg);
 		$("#chatHistory").show();
-		if(data.from !== username)
+		if (data.from !== username)
 			tip('message', data.from);
 	});
 
@@ -214,12 +215,12 @@ $(document).ready(function() {
 		username = $("#loginUser").attr("value");
 		rid = $('#channelList').val();
 
-		if(username.length > 20 || username.length == 0 || rid.length > 20 || rid.length == 0) {
+		if (username.length > 20 || username.length == 0 || rid.length > 20 || rid.length == 0) {
 			showError(LENGTH_ERROR);
 			return false;
 		}
 
-		if(!reg.test(username) || !reg.test(rid)) {
+		if (!reg.test(username) || !reg.test(rid)) {
 			showError(NAME_ERROR);
 			return false;
 		}
@@ -236,7 +237,7 @@ $(document).ready(function() {
 					username: username,
 					rid: rid
 				}, function(data) {
-					if(data.error) {
+					if (data.error) {
 						showError(DUPLICATE_ERROR);
 						return;
 					}
@@ -253,9 +254,9 @@ $(document).ready(function() {
 	$("#entry").keypress(function(e) {
 		var route = "chat.chatHandler.send";
 		var target = $("#usersList").val();
-		if(e.keyCode != 13 /* Return */ ) return;
+		if (e.keyCode != 13 /* Return */ ) return;
 		var msg = $("#entry").attr("value").replace("\n", "");
-		if(!util.isBlank(msg)) {
+		if (!util.isBlank(msg)) {
 			pomelo.request(route, {
 				rid: rid,
 				content: msg,
@@ -263,7 +264,7 @@ $(document).ready(function() {
 				target: target
 			}, function(data) {
 				$("#entry").attr("value", ""); // clear the entry field.
-				if(target != '*' && target != username) {
+				if (target != '*' && target != username) {
 					addMessage(username, target, msg);
 					$("#chatHistory").show();
 				}
